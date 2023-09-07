@@ -1,0 +1,51 @@
+:root {
+  // ⾊板
+  --cp-primary: #345dc2;
+  --cp-plain: #f8f6fc;
+  --cp-orange: #FCA21C;
+  --cp-text1: #65b0ff;
+  --cp-text2: #555555;
+  --cp-text3: #f8f8f8;
+  --cp-text4:#94979c;
+  --cp-tag: #848484;
+  --cp-dark: #979797;
+  --cp-tip: #C3C3C5;
+  --cp-disable: #D9DBDE;
+  --cp-line: #EDEDED;
+  --cp-bg: #F6F7F9;
+  --cp-price: #EB5757;
+  // 覆盖vant主体⾊
+  --van-primary-color: var(--cp-primary);
+  // 单元格上下间距
+  --van-cell-vertical-padding: 14px;
+  // 复选框大小
+  --van-checkbox-size: 14px;
+  // 默认按钮文字大小
+  --van-button-normal-font-size: 16px;
+}
+
+body {
+  font-size: 14px;
+  color: var(--cp-text2)
+}
+
+a {
+  color: var(--cp-text2)
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+}
+
+#nprogress .bar {
+  background-color: var(--cp-primary) !important;
+}
