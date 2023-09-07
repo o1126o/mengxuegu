@@ -50,6 +50,7 @@ const onClickLeft = () => {
     position: fixed;
     top: 20px;
     left: 20px;
+    font-size: 18px;
   }
 
   h1 {
