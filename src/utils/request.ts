@@ -1,6 +1,7 @@
-import axios from 'axios'
+import axios, { type Method } from 'axios'
 import type { InternalAxiosRequestConfig, AxiosResponse } from 'axios'
 import { showToast } from 'vant'
+import type { Data } from '../types/request'
 
 const instance = axios.create({ baseURL: '/dev-api', timeout: 3000 })
 
@@ -39,3 +40,13 @@ instance.interceptors.response.use(
     return Promise.reject(error)
   }
 )
+
+const request = <T>(url: string, method: Method = 'GET', submitData?: object) => {
+  return instance.request<T, Data<T>>({
+    url,
+    method,
+    [method.toLowerCase() === 'get' ? 'params' : 'data']: submitData
+  })
+}
+
+export default request

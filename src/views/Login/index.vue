@@ -99,6 +99,7 @@ const onClickLeft = () => {
     position: fixed;
     bottom: 20px;
     color: var(--cp-text4);
+    margin-left: 30px;
 
     .van-checkbox {
       margin-right: 10px;
