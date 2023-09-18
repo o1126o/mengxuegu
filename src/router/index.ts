@@ -62,10 +62,50 @@ const router = createRouter({
     },
     {
       path: `/course/details/:id`,
-      name: 'details',
+      name: 'course-details',
       component: () => import('../views/Course/CourseDetails.vue'),
       meta: {
         title: '商品详情'
+      }
+    },
+    {
+      path: `/article/details/:id`,
+      name: 'article-details',
+      component: () => import('../views/Article/ArticleDetail.vue'),
+      meta: {
+        title: '文章详情'
+      }
+    },
+    {
+      path: `/question/details/:id`,
+      name: 'question-details',
+      component: () => import('../views/Question/QuestionDetail.vue'),
+      meta: {
+        title: '问答详情'
+      }
+    },
+    {
+      path: '/search/:id',
+      name: 'search',
+      component: () => import('../views/Search/index.vue'),
+      meta: {
+        title: '搜索'
+      }
+    },
+    {
+      path: '/my/user',
+      name: 'user',
+      component: () => import('../views/My/MyUser.vue'),
+      meta: {
+        title: '用户信息'
+      }
+    },
+    {
+      path: '/my/list',
+      name: 'list',
+      component: () => import('../views/My/MyList.vue'),
+      meta: {
+        title: '用户信息'
       }
     }
   ]

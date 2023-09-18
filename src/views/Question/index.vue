@@ -67,6 +67,14 @@ const handleChange = (value: tabNavType) => {
   active.value = value
   queryList()
 }
+
+// 跳转到问答详情页
+import { useRouter } from 'vue-router'
+const router = useRouter()
+const handleQuestDet = (id: number | string) => {
+  console.log(id)
+  router.push(`/question/details/${id}`)
+}
 </script>
 
 <template>
@@ -79,7 +87,12 @@ const handleChange = (value: tabNavType) => {
         finished-text="没有更多了"
         @load="onLoad"
       >
-        <div class="question-page-list" v-for="item in questionList" :key="item.id">
+        <div
+          class="question-page-list"
+          v-for="item in questionList"
+          :key="item.id"
+          @click="handleQuestDet(item.id)"
+        >
           <p class="title">
             {{ item.title }}
           </p>

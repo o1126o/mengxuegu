@@ -2,6 +2,14 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 const router = useRouter()
+import { loginApi } from '@/services/user'
+import type { Logins, AuthUserLogin } from '@/types/user'
+import { showToast } from 'vant'
+
+const login = ref<Logins>({
+  mobile: '',
+  code: ''
+})
 
 // 是否同意登录协议
 const checked = ref(false)
@@ -16,6 +24,29 @@ const onClickLeft = () => {
     router.push('/')
   }
 }
+const onSubmit = async () => {
+  // 校验手机号
+  const mobileRegex = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/
+  if (!mobileRegex.test(login.value.mobile)) {
+    showToast('手机号码格式不正确')
+    return false // 如果手机号码格式不正确，停止后续操作并报错
+  }
+  // 校验验证码
+  if (login.value.code !== '123456') {
+    showToast('验证码不正确')
+    return false // 如果验证码不正确，停止后续操作并报错
+  }
+  // 校验协议通知
+  if (checked.value !== true) {
+    showToast('请认真阅读并同意用户服务协议和隐私权政策')
+    return false // 如果验证码不正确，停止后续操作并报错
+  }
+  // 执行登录操作
+  const loginRef = await loginApi(login.value)
+  localStorage.setItem('userInfo', JSON.stringify(loginRef.data.userInfo))
+  localStorage.setItem('token', loginRef.data.access_token)
+  router.push('/my')
+}
 </script>
 
 <template>
@@ -25,14 +56,24 @@ const onClickLeft = () => {
     <h2>欢迎回来！</h2>
     <div class="login-page-form">
       <van-cell-group inset>
-        <van-field label="手机号码" placeholder="请输入手机号码" label-align="top" />
-        <van-field label="验证码" placeholder="请输入手机验证码" label-align="top">
+        <van-field
+          label="手机号码"
+          placeholder="请输入手机号码"
+          label-align="top"
+          v-model="login.mobile"
+        />
+        <van-field
+          label="验证码"
+          placeholder="请输入手机验证码"
+          label-align="top"
+          v-model="login.code"
+        >
           <template #button>
             <van-button size="small" type="primary">获取验证码</van-button>
           </template>
         </van-field>
       </van-cell-group>
-      <van-button type="primary" block>登录</van-button>
+      <van-button type="primary" block @click="onSubmit">登录</van-button>
     </div>
     <div class="login-page-fot">
       <van-checkbox v-model="checked" icon-size="17px"></van-checkbox>请认真阅读并同意

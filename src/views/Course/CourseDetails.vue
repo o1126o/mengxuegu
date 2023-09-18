@@ -16,7 +16,6 @@ onMounted(async () => {
   const res = await couresApi()
   couser.value = res.data
   window.addEventListener('scroll', handleScroll)
-  // window.addEventListener('scroll', handleScrolls)
   const videoRef = await couresVideo()
   videoList.value = videoRef.data
   const commentRef = await couresComment()
@@ -28,10 +27,7 @@ onMounted(async () => {
 // 卸载前清除
 onBeforeUnmount(() => {
   window.removeEventListener('scroll', handleScroll)
-  // window.removeEventListener('scroll', handleScrolls)
 })
-
-// const isShow = ref<boolean>(false)
 
 // 滚动事件
 const isHeaderVisible = ref<boolean>(false)
@@ -109,18 +105,12 @@ const handleDetail = (id: number) => {
       </div>
     </div>
     <div class="center">
-      <!-- <div class="tab-bars" v-if="isShow">
-        <van-tabs v-model:active="active" title-active-color="#007bff">
-          <van-tab title="计算" name="计算"></van-tab>
-          <van-tab title="章节" name="章节"></van-tab>
-          <van-tab title="评论" name="评论"></van-tab>
-          <van-tab title="套餐" name="套餐"></van-tab>
-        </van-tabs>
-      </div> -->
       <div class="tab-bar">
         <van-tabs v-model:active="active" title-active-color="#007bff">
           <van-tab title="计算" name="计算">
-            <img :src="couser?.detailUrls[0]" class="imgs" />
+            <div class="imgs">
+              <img :src="couser?.detailUrls[0]" />
+            </div>
           </van-tab>
           <van-tab title="章节" name="章节">
             <div class="view-content">
@@ -219,7 +209,6 @@ const handleDetail = (id: number) => {
 <style lang="scss" scoped>
 .course-detail-page {
   box-sizing: border-box;
-  padding-bottom: 100px;
 }
 
 .title {
@@ -377,25 +366,22 @@ const handleDetail = (id: number) => {
   }
 }
 
-.tab-bars {
-  position: fixed;
-  top: 50px;
-  width: 100%;
-
-  .imgs {
-    width: 100%;
-  }
-}
-
 .center {
   box-sizing: border-box;
+  position: sticky;
+  top: 100px;
 
   .tab-bar {
     .imgs {
       width: 100%;
+      img {
+        width: 100%;
+      }
     }
 
     .view-content {
+      height: 100vh;
+      overflow-y: auto;
       padding: 18px;
       box-sizing: border-box;
 
@@ -444,6 +430,8 @@ const handleDetail = (id: number) => {
     }
 
     .view-comment {
+      height: 100vh;
+      overflow-y: auto;
       box-sizing: border-box;
       padding: 10px 20px;
 
@@ -502,6 +490,8 @@ const handleDetail = (id: number) => {
     }
 
     .view-group {
+      height: 100vh;
+      overflow-y: auto;
       box-sizing: border-box;
       padding: 15px;
 

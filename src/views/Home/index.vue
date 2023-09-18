@@ -105,6 +105,12 @@ const handleDetail = (id: number) => {
   console.log(id)
   router.push(`/course/details/${id}`)
 }
+
+// 跳转到搜索
+const handleCate = (id: number | string | null) => {
+  console.log(id)
+  router.push(`/search/${id}`)
+}
 </script>
 
 <template>
@@ -131,10 +137,15 @@ const handleDetail = (id: number) => {
     </div>
     <!-- 分类 -->
     <div class="home-page-cate">
-      <div class="box" v-for="item in lablelist?.slice(0, 7)" :key="item.id">
+      <div
+        class="box"
+        v-for="item in lablelist?.slice(0, 7)"
+        :key="item.id"
+        @click="handleCate(item.id)"
+      >
         {{ item.name }}
       </div>
-      <div class="box">全部分类</div>
+      <div class="box" @click="handleCate(null)">全部分类</div>
     </div>
     <!-- 回到顶部 -->
     <van-back-top right="2vw" bottom="15vh" />

@@ -21,7 +21,12 @@
           finished-text="没有更多了"
           @load="onLoad"
         >
-          <div class="itembox" v-for="ele in articlelist" :key="ele.id">
+          <div
+            class="itembox"
+            v-for="ele in articlelist"
+            :key="ele.id"
+            @click="handleArtivleDetail(ele.id)"
+          >
             <div class="infobox">
               <div class="l">
                 <h3>{{ ele.title }}</h3>
@@ -48,6 +53,7 @@
 </template>
 
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
 import { getArticle, labelHomeList } from '@/services/home'
 import type { ArticleType, labelHomes } from '@/types/home'
 import { onMounted, ref } from 'vue'
@@ -87,6 +93,13 @@ const onLoad = () => {
     txt.value.current++
   }
   loading.value = false
+}
+
+// 跳转到文章详情页
+const router = useRouter()
+const handleArtivleDetail = (id: number | string) => {
+  console.log(id)
+  router.push(`/article/details/${id}`)
 }
 </script>
 <style lang="scss" scoped>

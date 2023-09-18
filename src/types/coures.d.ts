@@ -16,21 +16,21 @@ export type CouresIn = {
 }
 
 // 视频章节
-type Section = {
+export type Section = {
   id: number
   name: string
   isFree: number
   videoUrl?: string // videoUrl 是可选的属性
 }
-type DataItem = {
+export type DataItem = {
   id: number
   name: string
   sectionList?: Section[] // sectionList 是可选的属性
 }
-type VideoData = DataItem[] // 定义数据类型为 DataItem 的数组
+export type VideoData = DataItem[] // 定义数据类型为 DataItem 的数组
 
 // 评论
-type Comment = {
+export type Comment = {
   id: number
   parentId: string
   userId: number
@@ -41,10 +41,10 @@ type Comment = {
   createDate: string
   children: Comment | null
 }
-type CommentData = Comment[] // 定义数据类型为 DataItem 的数组\
+export type CommentData = Comment[] // 定义数据类型为 DataItem 的数组\
 
 // 套餐
-type PackageItem = {
+export type PackageItem = {
   id: number
   userId: number
   nickName: string
@@ -59,7 +59,7 @@ type PackageItem = {
   priceDiscount: number
 }
 
-type PackageInfo = {
+export type PackageInfo = {
   id: number
   title: string
   groupPrice: number
