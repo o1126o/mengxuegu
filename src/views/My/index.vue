@@ -48,18 +48,18 @@ const handleList = () => {
     </div>
     <div class="my-page-line"></div>
     <div class="my-page-con">
-      <van-cell title="我的订单" icon="@/assets/book.svg" is-link @click="handleList" />
-      <van-cell title="我的余额" icon="@/assets/lock.svg" is-link />
-      <van-cell title="我的学习" icon="@/assets/beark.svg" is-link />
+      <van-cell title="我的订单" icon="column" is-link @click="handleList" />
+      <van-cell title="我的余额" icon="bag" is-link />
+      <van-cell title="我的学习" icon="cluster" is-link />
     </div>
     <div class="my-page-line"></div>
     <div class="my-page-con">
-      <van-cell title="设置" icon="@/assets/setting.svg" is-link />
-      <van-cell title="意见反馈" icon="@/assets/trumpet.svg" is-link />
+      <van-cell title="设置" icon="setting" is-link />
+      <van-cell title="意见反馈" icon="volume" is-link />
     </div>
     <div class="my-page-line"></div>
     <div class="my-page-con">
-      <van-cell title="关于我们" icon="@/assets/mean.svg" is-link />
+      <van-cell title="关于我们" icon="more" is-link />
     </div>
   </div>
 </template>
@@ -128,6 +128,10 @@ const handleList = () => {
   .van-cell__title {
     font-size: 16px;
     margin-left: 10px;
+  }
+  .van-cell__left-icon {
+    color: var(--cp-text1);
+    font-size: 22px;
   }
 }
 </style>

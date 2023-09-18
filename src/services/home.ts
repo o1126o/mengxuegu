@@ -4,9 +4,9 @@ import type {
   labelHomes,
   searchHomesLists,
   searchHomes,
-  Articleres,
-  Articlereq
+  Articleres
 } from '@/types/home'
+import type { questListType } from '@/types/request'
 
 // 轮播图
 export const bannerHomeList = () => {
@@ -18,12 +18,17 @@ export const labelHomeList = () => {
   return request<labelHomes[]>('/article/api/category/label/list')
 }
 
-// 列表
+// 列表 | 搜索
 export const searchHomeList = (data: searchHomes) => {
   return request<searchHomesLists>('/course/api/course/search', 'POST', data)
 }
 
-//阅读
-export const getArticle = (data: Articlereq) => {
-  return request<Articleres>('article/api/article/search', 'POST', data)
+//阅读 | 搜索
+export const getArticle = (data: searchHomes) => {
+  return request<Articleres>('/article/api/article/search', 'POST', data)
+}
+
+// 问答搜索
+export const queryQuest = (data: searchHomes) => {
+  return request<questListType>('/question/api/question/search', 'POST', data)
 }

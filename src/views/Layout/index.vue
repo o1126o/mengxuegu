@@ -2,32 +2,32 @@
 const tabBarList = [
   {
     name: '首页',
-    default: '@/icon/index.png',
-    active: '@/icon/index-active.png',
+    default: '../../../src/icon/index.png',
+    active: '../../../src/icon/index-active.png',
     path: '/home'
   },
   {
     name: '分类',
-    default: '@/icon/category.png',
-    active: '@/icon/category-active.png',
+    default: '../../../src/icon/category.png',
+    active: '../../../src/icon/category-active.png',
     path: '/category'
   },
   {
     name: '阅读',
-    default: '@/icon/article.png',
-    active: '@/icon/article-active.png',
+    default: '../../../src/icon/article.png',
+    active: '../../../src/icon/article-active.png',
     path: '/article'
   },
   {
     name: '问答',
-    default: '@/icon/question.png',
-    active: '@/icon/question-active.png',
+    default: '../../../src/icon/question.png',
+    active: '../../../src/icon/question-active.png',
     path: '/question'
   },
   {
     name: '我的',
-    default: '@/icon/my.png',
-    active: '@/icon/my-active.png',
+    default: '../../../src/icon/my.png',
+    active: '../../../src/icon/my-active.png',
     path: '/my'
   }
 ]

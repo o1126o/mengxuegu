@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue'
 import type { bannerHomes, labelHomes, searchHomes, searchHomesList } from '@/types/home'
 import { bannerHomeList, labelHomeList, searchHomeList } from '@/services/home'
-import TJlist from './components/TJlist.vue'
+import TJlist from '@/components/TJlist.vue'
 // 轮播图
 const bannerlist = ref<bannerHomes[]>()
 const queryBanner = async () => {
@@ -18,7 +18,7 @@ const queryLabel = async () => {
 
 // 列表
 const query = ref<searchHomes>({
-  currents: 1,
+  current: 1,
   size: 8,
   sort: '',
   isFree: 0
@@ -93,7 +93,7 @@ const onLoad = async () => {
   if (isfreeList.value && isfreeList.value.length >= total.value) {
     finished.value = true
   } else {
-    query.value.currents++
+    query.value.current++
   }
   loading.value = false
 }

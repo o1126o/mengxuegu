@@ -20,10 +20,13 @@ export type labelHomes = {
 
 // 列表
 export type searchHomes = {
-  currents: number
+  current: number
   size: number
-  sort?: string
-  isFree?: number
+  sort?: string | null | string[]
+  isFree?: number | string | null | string[]
+  categoryId?: number | string | null | string[]
+  labelId?: number | string | null | string[]
+  content?: number | string | null | string[]
 }
 export type searchHomesList = {
   id: number
@@ -45,11 +48,11 @@ export type searchHomesLists = {
 }
 
 //阅读请求
-export type Articlereq = {
-  current: number
-  size: number
-  categoryId?: string | number
-}
+// export type Articlereq = {
+//   current: number
+//   size: number
+//   categoryId?: string | number
+// }
 //阅读响应
 export type Articleres = {
   total: number

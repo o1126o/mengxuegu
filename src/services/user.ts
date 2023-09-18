@@ -6,10 +6,9 @@ import type {
   ArticleCommons,
   QuestionReply,
   QuestionDataList,
-  creaderOrder,
-  QueryZh
+  creaderOrder
 } from '@/types/user'
-import type { searchHomesLists } from '@/types/home'
+// import type { searchHomesLists } from '@/types/home'  QueryZh
 
 // 登录
 export const loginApi = (data: Logins) => {
@@ -54,7 +53,7 @@ export const questionReply = (id: string | string[]) => {
   return request<QuestionReply[]>(`/question/api/reply/list/${id}`)
 }
 
-// 搜索
-export const searchApi = (data: QueryZh) => {
-  return request<searchHomesLists>('/course/api/course/search', 'POST', { data })
-}
+// // 搜索  home.ts里
+// export const searchApi = (data: QueryZh) => {
+//   return request<searchHomesLists>('/course/api/course/search', 'POST', data)
+// }
