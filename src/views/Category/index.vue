@@ -10,13 +10,16 @@ const queryLabel = async () => {
   lablelists.value = labelRes.data
 }
 queryLabel()
+
+import { useRouter } from 'vue-router'
+const router = useRouter()
 </script>
 
 <template>
   <div class="category-page">
     <van-nav-bar title="分类">
       <template #right>
-        <van-icon name="search" size="18" />
+        <van-icon name="search" size="20" @click="router.push('/search/input')" />
       </template>
     </van-nav-bar>
     <div class="cate">
@@ -70,6 +73,7 @@ queryLabel()
   .van-nav-bar__title,
   .van-icon {
     color: #fff;
+    font-weight: 700;
   }
 
   // 左侧边栏

@@ -109,7 +109,10 @@ const handleDetail = (id: number) => {
 // 跳转到搜索
 const handleCate = (id: number | string | null) => {
   console.log(id)
-  router.push(`/search/${id}`)
+  router.push({
+    path: '/search',
+    query: { id }
+  })
 }
 </script>
 

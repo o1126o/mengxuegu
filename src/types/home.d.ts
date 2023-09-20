@@ -22,11 +22,11 @@ export type labelHomes = {
 export type searchHomes = {
   current: number
   size: number
-  sort?: string | null | string[]
-  isFree?: number | string | null | string[]
-  categoryId?: number | string | null | string[]
-  labelId?: number | string | null | string[]
-  content?: number | string | null | string[]
+  sort?: string | null | LocationQueryValue[]
+  isFree?: number | string | null | LocationQueryValue[]
+  categoryId?: number | string | null | LocationQueryValue[]
+  labelId?: number | string | null | LocationQueryValue[]
+  content?: number | string | null | LocationQueryValue[]
 }
 export type searchHomesList = {
   id: number

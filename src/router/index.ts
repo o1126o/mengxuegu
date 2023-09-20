@@ -85,11 +85,19 @@ const router = createRouter({
       }
     },
     {
-      path: '/search/:id',
+      path: '/search',
       name: 'search',
       component: () => import('../views/Search/index.vue'),
       meta: {
         title: '搜索'
+      }
+    },
+    {
+      path: '/search/input',
+      name: 'searchInput',
+      component: () => import('../views/Search/SearchInput.vue'),
+      meta: {
+        title: '搜索页'
       }
     },
     {

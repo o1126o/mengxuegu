@@ -43,18 +43,6 @@ const handleScroll = () => {
     // 隐藏头部列表的逻辑
   }
 }
-// const handleScrolls = () =>
-//   const scrollTop = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop
-//   // 判断滚动距离是否超过一定值
-//   if (scrollTop > 345) {
-//     isShow.value = true
-//     // 假设超过100px显示头部列表
-//     // 显示头部列表的逻辑
-//   } else {
-//     isShow.value = false
-//     // 隐藏头部列表的逻辑
-//   }
-// }
 
 // 返回
 const hanleBach = () => {
@@ -72,6 +60,11 @@ const active = ref<string>('计算')
 // 跳转详情
 const handleDetail = (id: number) => {
   console.log(id)
+}
+
+// 点击吸顶
+const onClickTab = () => {
+  window.scrollTo(0, 300)
 }
 </script>
 
@@ -106,7 +99,7 @@ const handleDetail = (id: number) => {
     </div>
     <div class="center">
       <div class="tab-bar">
-        <van-tabs v-model:active="active" title-active-color="#007bff">
+        <van-tabs v-model:active="active" title-active-color="#007bff" @click-tab="onClickTab">
           <van-tab title="计算" name="计算">
             <div class="imgs">
               <img :src="couser?.detailUrls[0]" />
@@ -374,13 +367,15 @@ const handleDetail = (id: number) => {
   .tab-bar {
     .imgs {
       width: 100%;
+      height: 87vh;
+      overflow-y: auto;
       img {
         width: 100%;
       }
     }
 
     .view-content {
-      height: 100vh;
+      height: 87vh;
       overflow-y: auto;
       padding: 18px;
       box-sizing: border-box;
@@ -430,7 +425,7 @@ const handleDetail = (id: number) => {
     }
 
     .view-comment {
-      height: 100vh;
+      height: 87vh;
       overflow-y: auto;
       box-sizing: border-box;
       padding: 10px 20px;
@@ -490,7 +485,7 @@ const handleDetail = (id: number) => {
     }
 
     .view-group {
-      height: 100vh;
+      height: 87vh;
       overflow-y: auto;
       box-sizing: border-box;
       padding: 15px;

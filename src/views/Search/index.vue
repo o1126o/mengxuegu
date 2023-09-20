@@ -8,17 +8,15 @@ import type { questListItem } from '@/types/request'
 import TJlist from '@/components/TJlist.vue'
 const route = useRoute()
 const router = useRouter()
-import downMenuTow from './components/downMenuTow.vue'
-import downMenuThree from './components/downMenuThree.vue'
-console.log(route.params.id)
+console.log(route.query.id)
 
 // 请求参数
 const query = ref<searchHomes>({
-  categoryId: route.params.categoryId || null,
-  content: route.params.content || null,
-  isFree: route.params.isFree || null,
-  labelId: route.params.labelId || null,
-  sort: route.params.sort || null,
+  categoryId: route.query.id || null,
+  content: route.query.value || null,
+  isFree: route.query.isFree || null,
+  labelId: route.query.labelId || null,
+  sort: route.query.sort || null,
   current: 1,
   size: 10
 })
@@ -77,7 +75,9 @@ const handleChange = () => {
 }
 
 // 搜索
-const value = ref('')
+const value = ref(route.query.value || '')
+console.log(value.value)
+
 const onSearch = (val: string) => {
   showToast(val)
   query.value.content = val
@@ -169,6 +169,57 @@ const onRefresh3 = () => {
   loading3.value = true
   queryQuestion()
 }
+
+const value1 = ref(null)
+const option1 = [
+  { text: '综合排序', value: null },
+  { text: '最新排序', value: 'new' },
+  { text: '热门排序', value: 'hot' }
+]
+const value2 = ref(null)
+const option2 = [
+  { text: '全部课程', value: null },
+  { text: '付费课程', value: 0 },
+  { text: '免费课程', value: 1 }
+]
+import { labelHomeList } from '@/services/home'
+import type { labelHomes } from '@/types/home'
+const active3 = ref(0)
+// 分类名称列表
+const lablelists = ref<labelHomes[]>()
+const queryLabel = async () => {
+  let labelRes = await labelHomeList()
+  lablelists.value = labelRes.data
+}
+queryLabel()
+
+const handleDown1 = () => {
+  query.value.sort = value1.value
+  if (activeName.value === 'article') {
+    articleList.value = []
+    queryArticle()
+  } else if (activeName.value === 'question') {
+    quesList.value = []
+    queryQuestion()
+  } else {
+    weekList.value = []
+    queryWeek()
+  }
+}
+const handleDown2 = () => {
+  query.value.isFree = value2.value
+  if (activeName.value === 'article') {
+    articleList.value = []
+    queryArticle()
+  } else if (activeName.value === 'question') {
+    quesList.value = []
+    queryQuestion()
+  } else {
+    weekList.value = []
+    queryWeek()
+  }
+}
+const handleDown3 = () => {}
 </script>
 
 <template>
@@ -189,7 +240,24 @@ const onRefresh3 = () => {
     <!-- 列表切换 -->
     <van-tabs v-model:active="activeName" title-active-color="#007bff" @click-tab="handleChange">
       <van-tab title="课程" name="week">
-        <div class="downs"></div>
+        <div class="downs">
+          <van-dropdown-menu>
+            <van-dropdown-item v-model="value1" :options="option1" @change="handleDown1" />
+            <van-dropdown-item v-model="value2" :options="option2" @change="handleDown2" />
+            <van-dropdown-item title="全部分类" ref="itemRef">
+              <div class="cate">
+                <van-sidebar v-model="active3">
+                  <van-sidebar-item title="全部分类" />
+                  <van-sidebar-item :title="item.name" v-for="item in lablelists" :key="item.id" />
+                </van-sidebar>
+                <div class="right" v-if="lablelists">
+                  <p @change="handleDown3">不限</p>
+                  <p v-for="i in lablelists[active3]?.labelList" :key="i.id">{{ i.name }}</p>
+                </div>
+              </div>
+            </van-dropdown-item>
+          </van-dropdown-menu>
+        </div>
         <van-pull-refresh v-model="refreshing1" @refresh="onRefresh1">
           <van-list
             v-model:loading="loading1"
@@ -204,6 +272,22 @@ const onRefresh3 = () => {
         </van-pull-refresh>
       </van-tab>
       <van-tab title="文章" name="article">
+        <div class="downs">
+          <van-dropdown-menu>
+            <van-dropdown-item v-model="value1" :options="option1" />
+            <van-dropdown-item title="全部分类" ref="itemRef">
+              <div class="cate">
+                <van-sidebar v-model="active3">
+                  <van-sidebar-item title="全部分类" />
+                  <van-sidebar-item :title="item.name" v-for="item in lablelists" :key="item.id" />
+                </van-sidebar>
+                <div class="right" v-if="lablelists">
+                  <p v-for="i in lablelists[active3]?.labelList" :key="i.id">{{ i.name }}</p>
+                </div>
+              </div>
+            </van-dropdown-item>
+          </van-dropdown-menu>
+        </div>
         <van-pull-refresh v-model="refreshing2" @refresh="onRefresh2">
           <van-list
             v-model:loading="loading2"
@@ -244,6 +328,22 @@ const onRefresh3 = () => {
         </van-pull-refresh>
       </van-tab>
       <van-tab title="问答" name="question">
+        <div class="downs">
+          <van-dropdown-menu>
+            <van-dropdown-item v-model="value1" :options="option1" />
+            <van-dropdown-item title="全部分类" ref="itemRef">
+              <div class="cate">
+                <van-sidebar v-model="active3">
+                  <van-sidebar-item title="全部分类" />
+                  <van-sidebar-item :title="item.name" v-for="item in lablelists" :key="item.id" />
+                </van-sidebar>
+                <div class="right" v-if="lablelists">
+                  <p v-for="i in lablelists[active3]?.labelList" :key="i.id">{{ i.name }}</p>
+                </div>
+              </div>
+            </van-dropdown-item>
+          </van-dropdown-menu>
+        </div>
         <van-pull-refresh v-model="refreshing3" @refresh="onRefresh3">
           <van-list
             v-model:loading="loading3"
@@ -297,6 +397,30 @@ const onRefresh3 = () => {
   .van-dropdown-menu__bar {
     box-shadow: none;
   }
+
+  .van-sidebar {
+    width: 100px;
+
+    &-item {
+      width: 100%;
+      height: 75px;
+      text-align: center;
+      font-size: 16px;
+      line-height: 40px;
+      color: var(--cp-text4);
+    }
+  }
+
+  .van-sidebar-item--select {
+    color: var(--cp-bg);
+    background-color: #f7f8fa;
+  }
+
+  .van-sidebar-item--select:before {
+    width: 2.5px;
+    height: 25px;
+    background-color: var(--cp-bg);
+  }
 }
 
 .search-page {
@@ -327,6 +451,8 @@ const onRefresh3 = () => {
   .list {
     box-sizing: border-box;
     padding: 0 15px;
+    overflow-y: auto;
+    height: 81vh;
 
     .itembox {
       width: 100%;
@@ -391,8 +517,29 @@ const onRefresh3 = () => {
 
 .downs {
   width: 100%;
+}
+
+.cate {
+  width: 100%;
   display: flex;
-  align-items: center;
-  justify-content: space-around;
+
+  .right {
+    padding: 20px 10px;
+    display: flex;
+    width: 68%;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-content: flex-start;
+
+    p {
+      width: 80px;
+      height: 36px;
+      border: 1px solid var(--cp-tip);
+      line-height: 36px;
+      border-radius: 18px;
+      text-align: center;
+      margin-bottom: 15px;
+    }
+  }
 }
 </style>
