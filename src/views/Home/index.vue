@@ -107,11 +107,23 @@ const handleDetail = (id: number) => {
 }
 
 // 跳转到搜索
-const handleCate = (id: number | string | null) => {
-  console.log(id)
+const handleCate = (item: labelHomes | null) => {
   router.push({
     path: '/search',
-    query: { id }
+    query: { labelId: item?.id, name: item?.name }
+  })
+}
+//
+const handleSearchPage = (val: string) => {
+  router.push({
+    path: '/search',
+    query: { sort: val }
+  })
+}
+const handleSearchPages = (val: number) => {
+  router.push({
+    path: '/search',
+    query: { isFree: val }
   })
 }
 </script>
@@ -144,7 +156,7 @@ const handleCate = (id: number | string | null) => {
         class="box"
         v-for="item in lablelist?.slice(0, 7)"
         :key="item.id"
-        @click="handleCate(item.id)"
+        @click="handleCate(item)"
       >
         {{ item.name }}
       </div>
@@ -154,7 +166,7 @@ const handleCate = (id: number | string | null) => {
     <van-back-top right="2vw" bottom="15vh" />
     <!-- 热门推荐 -->
     <div class="home-page-hot-free">
-      <div class="top">
+      <div class="top" @click="handleSearchPage('hot')">
         <div class="top-left">
           <p class="title">热门推荐</p>
           <span class="tag">HOT</span>
@@ -184,7 +196,7 @@ const handleCate = (id: number | string | null) => {
     </div>
     <!-- 近期上新 -->
     <div class="home-page-new">
-      <div class="top">
+      <div class="top" @click="handleSearchPage('new')">
         <div class="top-left">
           <p class="title">近期上新</p>
           <span class="tag">NEW</span>
@@ -227,7 +239,7 @@ const handleCate = (id: number | string | null) => {
     </div>
     <!-- 免费精选 -->
     <div class="home-page-hot-free">
-      <div class="top">
+      <div class="top" @click="handleSearchPages(1)">
         <div class="top-left">
           <p class="title">免费精选</p>
           <span class="tag">FREE</span>
@@ -257,7 +269,7 @@ const handleCate = (id: number | string | null) => {
     </div>
     <!-- 付费精品 -->
     <div class="home-page-isfree">
-      <div class="top">
+      <div class="top" @click="handleSearchPages(0)">
         <div class="top-left">
           <p class="title">付费精品</p>
           <span class="tag">NICE</span>

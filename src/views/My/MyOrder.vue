@@ -40,7 +40,6 @@ const handleDelOrder = (orderId: number | string) => {
     message: '确定删除该订单记录'
   })
     .then(() => {
-      // on confirm
       orderDel(orderId)
       showToast('删除成功')
       aueryList()
@@ -48,6 +47,14 @@ const handleDelOrder = (orderId: number | string) => {
     .catch(() => {
       // on cancel
     })
+}
+
+// 立即支付
+const handlePay = (id: number | string, price: string | number) => {
+  router.push({
+    path: '/order/order',
+    query: { id, price }
+  })
 }
 </script>
 
@@ -94,7 +101,9 @@ const handleDelOrder = (orderId: number | string) => {
           <van-button size="small" class="btn" @click="handleCancelOrder(item.orderId)"
             >取消订单</van-button
           >
-          <van-button size="small" type="danger">立即支付</van-button>
+          <van-button size="small" type="danger" @click="handlePay(item.orderId, item.pricePayable)"
+            >立即支付</van-button
+          >
         </p>
       </div>
       <div class="pay" v-if="item.status === 2">

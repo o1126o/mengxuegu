@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue'
-import { couresApi, couresVideo, couresComment, couresGroup } from '@/services/coures'
+import { couresApi, couresVideo, couresComment, couresGroup, isBuyApi } from '@/services/coures'
 import { useRouter } from 'vue-router'
-import type { CouresIn, VideoData, CommentData, PackageInfo } from '@/types/coures'
+import type { CouresIn, VideoData, CommentData, PackageInfo, Section } from '@/types/coures'
+import { showToast } from 'vant'
 const router = useRouter()
 // 课程内容
 const couser = ref<CouresIn>()
@@ -12,7 +13,11 @@ const videoList = ref<VideoData>()
 const commentList = ref<CommentData>()
 // 课程套餐
 const groupList = ref<PackageInfo[]>()
+// 是否已购买课程
+const isBuy = ref<boolean>(false)
 onMounted(async () => {
+  const isRef = await isBuyApi()
+  isBuy.value = isRef.data.isBuy
   const res = await couresApi()
   couser.value = res.data
   window.addEventListener('scroll', handleScroll)
@@ -66,6 +71,51 @@ const handleDetail = (id: number) => {
 const onClickTab = () => {
   window.scrollTo(0, 300)
 }
+
+// 跳转到视频详情页
+const handleVideo = () => {
+  router.push('/course/course-play/null')
+}
+
+// 观看视频
+const videos = ref<string | undefined>('')
+const show = ref<boolean>(false)
+const handleWatch = (val: Section) => {
+  if (isBuy.value) {
+    router.push('/course/course-play/null')
+  } else {
+    if (val.isFree === 1) {
+      show.value = true
+      videos.value = val.videoUrl
+    } else {
+      showToast('请先购买')
+    }
+  }
+}
+
+const token = localStorage.getItem('token')!
+
+// 立即购买
+const handleBuy = () => {
+  if (!token) {
+    router.push('/login')
+  } else {
+    router.push({
+      path: '/order/confirm-buy',
+      query: couser.value
+    })
+  }
+}
+const handleGroupBuy = (val: PackageInfo) => {
+  if (!token) {
+    router.push('/login')
+  } else {
+    router.push({
+      path: '/order/confirm-buy',
+      query: { list: JSON.stringify(val) }
+    })
+  }
+}
 </script>
 
 <template>
@@ -109,10 +159,16 @@ const onClickTab = () => {
             <div class="view-content">
               <div class="videos" v-for="(item, index) in videoList" :key="item.id">
                 <div class="chapters">第{{ index + 1 }}章 {{ item.name }}</div>
-                <div class="sections" v-for="i in item.sectionList" :key="i.id">
+                <div
+                  class="sections"
+                  v-for="i in item.sectionList"
+                  :key="i.id"
+                  @click="handleWatch(i)"
+                >
                   <div class="iconfont"><van-icon name="arrow" /></div>
                   <div class="row">{{ `${index + 1}-${i.id}` }} {{ i.name }}</div>
-                  <div class="see">{{ i.isFree === 0 ? '试看' : '' }}</div>
+                  <div class="see" v-if="isBuy"></div>
+                  <div class="see" v-else>{{ i.isFree === 1 ? '试看' : '' }}</div>
                 </div>
               </div>
             </div>
@@ -184,7 +240,7 @@ const onClickTab = () => {
                     <span>￥{{ item.totalPrice }}</span>
                     <span>￥{{ item.groupPrice }}</span>
                   </p>
-                  <p>购买套餐</p>
+                  <p @click="handleGroupBuy(item)">购买套餐</p>
                 </div>
               </div>
             </div>
@@ -194,8 +250,25 @@ const onClickTab = () => {
     </div>
     <!-- 立即购买 -->
     <div class="fots">
-      <van-button type="primary" round block>立即购买</van-button>
+      <van-button type="primary" round block v-if="isBuy" @click="handleVideo">立即观看</van-button>
+      <van-button type="primary" round block v-else @click="handleBuy">立即购买</van-button>
     </div>
+    <van-overlay :show="show" @click="show = false">
+      <div class="wrapper" @click.stop>
+        <div class="block" @click="show = false">
+          <div class="txt">免费试看 <van-icon name="cross" /></div>
+          <video
+            id="video"
+            :src="videos"
+            controls="true"
+            webkit-playsinline="true"
+            playsinline="true"
+            x-webkit-airplay="allow"
+            style="object-fit: fill"
+          ></video>
+        </div>
+      </div>
+    </van-overlay>
   </div>
 </template>
 
@@ -369,6 +442,7 @@ const onClickTab = () => {
       width: 100%;
       height: 87vh;
       overflow-y: auto;
+
       img {
         width: 100%;
       }
@@ -574,12 +648,14 @@ const onClickTab = () => {
               font-weight: 700;
               margin-right: 5px;
             }
+
             span:nth-child(2) {
               color: var(--cp-text4);
               font-size: 15px;
               text-decoration-line: line-through;
             }
           }
+
           p:nth-child(2) {
             color: var(--cp-price);
             font-weight: 700;
@@ -593,5 +669,30 @@ const onClickTab = () => {
 
 .active {
   color: var(--cp-price);
+}
+
+.wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.block {
+  width: 100%;
+  height: 300px;
+  text-align: center;
+  box-sizing: border-box;
+
+  .txt {
+    font-size: 17px;
+    color: #fff;
+    margin-bottom: 50px;
+  }
+
+  video {
+    width: 100%;
+    height: 230px;
+  }
 }
 </style>

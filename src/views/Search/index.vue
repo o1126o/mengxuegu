@@ -2,13 +2,12 @@
 import { onMounted, ref } from 'vue'
 import { showToast } from 'vant'
 import { useRoute, useRouter } from 'vue-router'
-import type { ArticleType, searchHomes, searchHomesList } from '@/types/home'
+import type { ArticleType, labels, searchHomes, searchHomesList } from '@/types/home'
 import { getArticle, queryQuest, searchHomeList } from '@/services/home'
 import type { questListItem } from '@/types/request'
 import TJlist from '@/components/TJlist.vue'
 const route = useRoute()
 const router = useRouter()
-console.log(route.query.id)
 
 // 请求参数
 const query = ref<searchHomes>({
@@ -58,13 +57,22 @@ const queryQuestion = async () => {
   loading3.value = false
 }
 
+const value2 = ref<number>(3)
+const title = ref<string>('全部分类')
 onMounted(() => {
   queryWeek()
+  value2.value = Number(route.query.isFree)
+  if (!route.query.isFree) {
+    value2.value = 3
+  }
+  title.value = String(route.query.name)
+  if (!route.query.name) {
+    title.value = '全部分类'
+  }
 })
 // 默认标签
 const activeName = ref('week')
 const handleChange = () => {
-  console.log(activeName.value)
   if (activeName.value === 'article') {
     queryArticle()
   } else if (activeName.value === 'question') {
@@ -76,7 +84,6 @@ const handleChange = () => {
 
 // 搜索
 const value = ref(route.query.value || '')
-console.log(value.value)
 
 const onSearch = (val: string) => {
   showToast(val)
@@ -91,17 +98,16 @@ const onSearch = (val: string) => {
     weekList.value = []
     queryWeek()
   }
+  value.value = ''
 }
 
 // 跳转到文章详情页
 const handleArtivleDetail = (id: number | string) => {
-  console.log(id)
   router.push(`/article/details/${id}`)
 }
 
 // 跳转到问答详情页
 const handleQuestDet = (id: number | string) => {
-  console.log(id)
   router.push(`/question/details/${id}`)
 }
 
@@ -117,7 +123,7 @@ const finished3 = ref(false)
 const refreshing3 = ref(false)
 // 上拉加载1
 const onLoad1 = () => {
-  query.value.current += 1
+  query.value.current++
   loading1.value = true
   if (refreshing1.value) {
     weekList.value = []
@@ -170,21 +176,20 @@ const onRefresh3 = () => {
   queryQuestion()
 }
 
-const value1 = ref(null)
+const value1 = ref(route.query.sort || null)
 const option1 = [
   { text: '综合排序', value: null },
   { text: '最新排序', value: 'new' },
   { text: '热门排序', value: 'hot' }
 ]
-const value2 = ref(null)
 const option2 = [
-  { text: '全部课程', value: null },
+  { text: '全部课程', value: 3 },
   { text: '付费课程', value: 0 },
   { text: '免费课程', value: 1 }
 ]
 import { labelHomeList } from '@/services/home'
 import type { labelHomes } from '@/types/home'
-const active3 = ref(0)
+const active3 = ref<number>(0)
 // 分类名称列表
 const lablelists = ref<labelHomes[]>()
 const queryLabel = async () => {
@@ -219,7 +224,37 @@ const handleDown2 = () => {
     queryWeek()
   }
 }
-const handleDown3 = () => {}
+
+// 监听切换事件
+const handleDown3 = () => {
+  title.value = lablelists.value![Number(active3.value) - 1].name
+  query.value.categoryId = active3.value
+  if (activeName.value === 'article') {
+    articleList.value = []
+    queryArticle()
+  } else if (activeName.value === 'question') {
+    quesList.value = []
+    queryQuestion()
+  } else {
+    weekList.value = []
+    queryWeek()
+  }
+}
+const itemRef = ref(null)
+const handleDown4 = (i: labels) => {
+  title.value = i.name
+  query.value.labelId = i.id
+  if (activeName.value === 'article') {
+    articleList.value = []
+    queryArticle()
+  } else if (activeName.value === 'question') {
+    quesList.value = []
+    queryQuestion()
+  } else {
+    weekList.value = []
+    queryWeek()
+  }
+}
 </script>
 
 <template>
@@ -244,15 +279,21 @@ const handleDown3 = () => {}
           <van-dropdown-menu>
             <van-dropdown-item v-model="value1" :options="option1" @change="handleDown1" />
             <van-dropdown-item v-model="value2" :options="option2" @change="handleDown2" />
-            <van-dropdown-item title="全部分类" ref="itemRef">
+            <van-dropdown-item :title="title" ref="itemRef">
               <div class="cate">
                 <van-sidebar v-model="active3">
                   <van-sidebar-item title="全部分类" />
                   <van-sidebar-item :title="item.name" v-for="item in lablelists" :key="item.id" />
                 </van-sidebar>
                 <div class="right" v-if="lablelists">
-                  <p @change="handleDown3">不限</p>
-                  <p v-for="i in lablelists[active3]?.labelList" :key="i.id">{{ i.name }}</p>
+                  <p @click="handleDown3">不限</p>
+                  <p
+                    v-for="i in lablelists[active3 - 1]?.labelList"
+                    :key="i.id"
+                    @click="handleDown4(i)"
+                  >
+                    {{ i.name }}
+                  </p>
                 </div>
               </div>
             </van-dropdown-item>
@@ -282,7 +323,14 @@ const handleDown3 = () => {}
                   <van-sidebar-item :title="item.name" v-for="item in lablelists" :key="item.id" />
                 </van-sidebar>
                 <div class="right" v-if="lablelists">
-                  <p v-for="i in lablelists[active3]?.labelList" :key="i.id">{{ i.name }}</p>
+                  <p @click="handleDown3">不限</p>
+                  <p
+                    v-for="i in lablelists[active3 - 1]?.labelList"
+                    :key="i.id"
+                    @click="handleDown4(i)"
+                  >
+                    {{ i.name }}
+                  </p>
                 </div>
               </div>
             </van-dropdown-item>
@@ -296,32 +344,30 @@ const handleDown3 = () => {}
             @load="onLoad2"
           >
             <div class="list">
-              <div class="list">
-                <div
-                  class="itembox"
-                  v-for="ele in articleList"
-                  :key="ele.id"
-                  @click="handleArtivleDetail(ele.id)"
-                >
-                  <div class="infobox">
-                    <div class="l">
-                      <h3>{{ ele.title }}</h3>
-                      <p>{{ ele.summary }}</p>
-                    </div>
-                    <img
-                      v-if="ele.imageUrl"
-                      :src="
-                        ele.imageUrl?.includes('http')
-                          ? ele.imageUrl
-                          : `http://m.mengxuegu.com${ele.imageUrl}`
-                      "
-                    />
+              <div
+                class="itembox"
+                v-for="ele in articleList"
+                :key="ele.id"
+                @click="handleArtivleDetail(ele.id)"
+              >
+                <div class="infobox">
+                  <div class="l">
+                    <h3>{{ ele.title }}</h3>
+                    <p>{{ ele.summary }}</p>
                   </div>
-                  <span style="color: #222; font-size: 13px">{{ ele.nickName }}</span>
-                  <span style="color: #999; font-size: 13px">
-                    · {{ ele.updateDate }} · {{ ele.viewCount }}赞</span
-                  >
+                  <img
+                    v-if="ele.imageUrl"
+                    :src="
+                      ele.imageUrl?.includes('http')
+                        ? ele.imageUrl
+                        : `http://m.mengxuegu.com${ele.imageUrl}`
+                    "
+                  />
                 </div>
+                <span style="color: #222; font-size: 13px">{{ ele.nickName }}</span>
+                <span style="color: #999; font-size: 13px">
+                  · {{ ele.updateDate }} · {{ ele.viewCount }}赞</span
+                >
               </div>
             </div>
           </van-list>
@@ -338,7 +384,14 @@ const handleDown3 = () => {}
                   <van-sidebar-item :title="item.name" v-for="item in lablelists" :key="item.id" />
                 </van-sidebar>
                 <div class="right" v-if="lablelists">
-                  <p v-for="i in lablelists[active3]?.labelList" :key="i.id">{{ i.name }}</p>
+                  <p @click="handleDown3">不限</p>
+                  <p
+                    v-for="i in lablelists[active3 - 1]?.labelList"
+                    :key="i.id"
+                    @click="handleDown4(i)"
+                  >
+                    {{ i.name }}
+                  </p>
                 </div>
               </div>
             </van-dropdown-item>
@@ -451,8 +504,6 @@ const handleDown3 = () => {}
   .list {
     box-sizing: border-box;
     padding: 0 15px;
-    overflow-y: auto;
-    height: 81vh;
 
     .itembox {
       width: 100%;

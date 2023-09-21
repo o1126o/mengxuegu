@@ -1,18 +1,18 @@
 // 课程内容
 export type CouresIn = {
-  id: number
-  userId: number
-  nickName: string
-  userImage: string
-  title: string
-  totalTime: string
-  studyTotal: number
-  goodRate: string
-  mainImage: string
-  isFree: number
-  priceOriginal: number
-  priceDiscount: number
-  detailUrls: string[]
+  id?: number
+  userId?: number
+  nickName?: string
+  userImage?: string
+  title?: string
+  totalTime?: string
+  studyTotal?: number
+  goodRate?: string
+  mainImage?: string
+  isFree?: number
+  priceOriginal?: number
+  priceDiscount?: number
+  detailUrls?: string[]
 }
 
 // 视频章节
@@ -65,4 +65,14 @@ export type PackageInfo = {
   groupPrice: number
   totalPrice: number
   list: PackageItem[]
+}
+
+// 课程评价
+export type CoureStar = {
+  content: string
+  courseId: string | string[]
+  nickName?: string
+  score: number
+  userId?: number
+  userImage?: string
 }

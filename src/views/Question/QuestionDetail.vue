@@ -3,6 +3,8 @@ import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import type { QuestionReply, QuestionDataList } from '@/types/user'
 import { questionApi, questionReply } from '@/services/user'
+import { questStar, questContent } from '@/services/question'
+import { showSuccessToast } from 'vant'
 const router = useRouter()
 const route = useRoute()
 // 路由返回
@@ -16,12 +18,18 @@ const hanleBach = () => {
   }
 }
 
+const stars = ref<undefined | number>()
+
 const queDetails = ref<QuestionDataList>()
 const queComment = ref<QuestionReply[]>()
 const queryQuestionDet = async () => {
   const QuestionDetailRef = await questionApi(route.params.id)
   queDetails.value = QuestionDetailRef.data
   console.log(QuestionDetailRef)
+  stars.value = queDetails.value?.star
+  console.log(stars.value)
+}
+const queryQuestionDets = async () => {
   const QuestionCommentRef = await questionReply(route.params.id)
   queComment.value = QuestionCommentRef.data
   console.log(QuestionCommentRef)
@@ -29,6 +37,7 @@ const queryQuestionDet = async () => {
 
 onMounted(() => {
   queryQuestionDet()
+  queryQuestionDets()
 })
 
 const token = ref(localStorage.getItem('userInfo'))
@@ -37,13 +46,42 @@ const token = ref(localStorage.getItem('userInfo'))
 const handleLike = () => {
   if (!token.value) {
     router.push('/login')
+  } else {
+    questStar(route.params.id)
+    stars.value = 1
   }
 }
+const handleLikes = () => {
+  if (!token.value) {
+    router.push('/login')
+  } else {
+    stars.value = 0
+  }
+}
+
+// 回答问题面板
+const show = ref<boolean>(false)
+// 回答问题内容
+const htmlContent = ref<string>('')
 // 回答问题
 const handleLabel = () => {
   if (!token.value) {
     router.push('/login')
+  } else {
+    show.value = true
   }
+}
+// 提交
+const handleReply = () => {
+  questContent({
+    htmlContent: htmlContent.value,
+    mdContent: htmlContent.value,
+    questionId: route.params.id
+  })
+  htmlContent.value = ''
+  show.value = false
+  queryQuestionDets()
+  showSuccessToast('回答成功')
 }
 </script>
 
@@ -97,14 +135,33 @@ const handleLabel = () => {
     </div>
     <!-- 问题 -->
     <div class="footer">
-      <p><van-icon name="like-o" @click="handleLike" />关注问题</p>
-      <p><van-icon name="label-o" @click="handleLabel" />回答问题</p>
+      <p @click="handleLike" v-if="stars === 0"><van-icon name="like-o" />关注问题</p>
+      <p v-else class="diry" @click="handleLikes">已关注问题</p>
+      <p @click="handleLabel"><van-icon name="label-o" />回答问题</p>
     </div>
+    <!-- 回答问题 -->
+    <van-action-sheet v-model:show="show" title="回答问题" :overlay="false">
+      <van-button
+        type="primary"
+        size="small"
+        class="btn"
+        :disabled="!htmlContent"
+        @click="handleReply"
+        >提交</van-button
+      >
+      <div class="box">
+        <textarea
+          placeholder="有何高见,展开讲讲......"
+          class="inputs"
+          v-model="htmlContent"
+        ></textarea>
+      </div>
+    </van-action-sheet>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.article-detail-page {
+.question-detail-page {
   box-sizing: border-box;
   padding-bottom: 100px;
   padding-top: 50px;
@@ -244,7 +301,7 @@ const handleLabel = () => {
   position: fixed;
   bottom: 0;
   width: 100%;
-  z-index: 8888;
+  z-index: 888;
   display: flex;
   align-items: center;
   padding: 10px;
@@ -252,8 +309,41 @@ const handleLabel = () => {
     width: 50%;
     text-align: center;
     font-size: 15px;
-    color: var(--cp-text1);
+    color: var(--cp-bg);
     font-weight: 700;
+  }
+  .diry {
+    color: var(--cp-text4);
+  }
+}
+
+:deep() {
+  .van-action-sheet {
+    height: 230px;
+    z-index: 9999;
+    box-shadow: 1px 1px 5px 1px #ccc;
+  }
+  .van-action-sheet__close {
+    left: 0;
+    color: var(--cp-bg);
+    font-size: 16px;
+  }
+  .btn {
+    z-index: 1;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+}
+.box {
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  .inputs {
+    width: 100%;
+    background-color: var(--cp-plain);
+    border: none;
+    height: 153px;
   }
 }
 </style>

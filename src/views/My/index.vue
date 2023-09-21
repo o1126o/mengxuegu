@@ -21,7 +21,15 @@ const handleList = () => {
   if (!token) {
     router.push('/login')
   } else {
-    router.push('/my/list')
+    router.push('/my/order')
+  }
+}
+// 我的学习页面
+const handleStudy = () => {
+  if (!token) {
+    router.push('/login')
+  } else {
+    router.push('/my/study')
   }
 }
 </script>
@@ -50,7 +58,7 @@ const handleList = () => {
     <div class="my-page-con">
       <van-cell title="我的订单" icon="column" is-link @click="handleList" />
       <van-cell title="我的余额" icon="bag" is-link />
-      <van-cell title="我的学习" icon="cluster" is-link />
+      <van-cell title="我的学习" icon="cluster" is-link @click="handleStudy" />
     </div>
     <div class="my-page-line"></div>
     <div class="my-page-con">

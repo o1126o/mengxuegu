@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { labelHomeList } from '@/services/home'
-import type { labelHomes } from '@/types/home'
+import type { labelHomes, labels } from '@/types/home'
 const active = ref(0)
 // 分类名称列表
 const lablelists = ref<labelHomes[]>()
@@ -13,6 +13,14 @@ queryLabel()
 
 import { useRouter } from 'vue-router'
 const router = useRouter()
+
+// 跳转到搜索列表页
+const handleSearch = (i: labels) => {
+  router.push({
+    path: '/search',
+    query: { labelId: i.id, name: i.name }
+  })
+}
 </script>
 
 <template>
@@ -27,7 +35,9 @@ const router = useRouter()
         <van-sidebar-item :title="item.name" v-for="item in lablelists" :key="item.id" />
       </van-sidebar>
       <div class="right" v-if="lablelists">
-        <p v-for="i in lablelists[active]?.labelList" :key="i.id">{{ i.name }}</p>
+        <p v-for="i in lablelists[active]?.labelList" :key="i.id" @click="handleSearch(i)">
+          {{ i.name }}
+        </p>
       </div>
     </div>
   </div>

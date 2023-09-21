@@ -3,6 +3,8 @@ import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import type { ArticleDataList, ArticleCommons } from '@/types/user'
 import { articleApi, articleComment } from '@/services/user'
+import { articleCom } from '@/services/question'
+import { showSuccessToast } from 'vant'
 const router = useRouter()
 const route = useRoute()
 // 路由返回
@@ -24,10 +26,32 @@ const queryArticleDet = async () => {
   const ArticleCommentRef = await articleComment(route.params.id)
   artComment.value = ArticleCommentRef.data
 }
+const queryArticleDets = async () => {
+  const ArticleCommentRef = await articleComment(route.params.id)
+  artComment.value = ArticleCommentRef.data
+}
 
 onMounted(() => {
   queryArticleDet()
+  queryArticleDets()
 })
+
+const token = ref(localStorage.getItem('userInfo'))
+// 评论
+const input = ref<string>('')
+// 提交
+const handleCOM = () => {
+  if (!token.value) {
+    router.push('/login')
+  } else {
+    if (input.value !== '') {
+      articleCom({ content: input.value, articleId: route.params.id })
+      queryArticleDets()
+      input.value = ''
+      showSuccessToast('评论成功')
+    }
+  }
+}
 </script>
 
 <template>
@@ -76,8 +100,8 @@ onMounted(() => {
     </div>
     <!-- 提交评论 -->
     <div class="fot">
-      <input type="text" placeholder="有何高见,展开讲讲......" />
-      <van-button size="mini">提交</van-button>
+      <input type="text" placeholder="有何高见,展开讲讲......" v-model="input" />
+      <van-button size="mini" @click="handleCOM">提交</van-button>
     </div>
   </div>
 </template>

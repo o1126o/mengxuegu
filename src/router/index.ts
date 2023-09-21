@@ -109,11 +109,43 @@ const router = createRouter({
       }
     },
     {
-      path: '/my/list',
-      name: 'list',
-      component: () => import('../views/My/MyList.vue'),
+      path: '/my/order',
+      name: 'order',
+      component: () => import('../views/My/MyOrder.vue'),
       meta: {
-        title: '用户信息'
+        title: '订单详情'
+      }
+    },
+    {
+      path: '/my/study',
+      name: 'study',
+      component: () => import('../views/My/MyStudy.vue'),
+      meta: {
+        title: '我的学习'
+      }
+    },
+    {
+      path: '/course/course-play/:id',
+      name: 'course-play',
+      component: () => import('../views/Course/CoursePlay.vue'),
+      meta: {
+        title: '课程视频'
+      }
+    },
+    {
+      path: '/order/confirm-buy',
+      name: 'confirm-buy',
+      component: () => import('../views/My/MyCount.vue'),
+      meta: {
+        title: '确认购买'
+      }
+    },
+    {
+      path: '/order/order',
+      name: 'orders',
+      component: () => import('../views/My/MyPrice.vue'),
+      meta: {
+        title: '支付订单'
       }
     }
   ]

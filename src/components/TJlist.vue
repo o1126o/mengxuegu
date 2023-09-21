@@ -18,8 +18,8 @@ const handleDetail = (id: number) => {
         <img
           :src="
             item.mainImage.includes('http')
-              ? item.mainImage
-              : 'http://m.mengxuegu.com' + item.mainImage
+              ? item?.mainImage
+              : 'http://m.mengxuegu.com' + item?.mainImage
           "
         />
         <div class="time">

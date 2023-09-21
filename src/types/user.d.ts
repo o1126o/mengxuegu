@@ -104,13 +104,10 @@ export type QuestionReply = {
   createDate: string
 }
 
-// // 搜索请求  home.d.ts里
-// export type QueryZh = {
-//   categoryId: number | string | null | string[]
-//   content: number | string | null | string[]
-//   isFree: number | string | null | string[]
-//   labelId: number | string | null | string[]
-//   sort: string | null | string[]
-//   current: number
-//   size: number
-// }
+// 我的学习
+export type CourseStudy = {
+  id: number
+  title: string
+  mainImage: string
+  percent: number
+}

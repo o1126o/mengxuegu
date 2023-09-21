@@ -38,3 +38,16 @@ export type questListType = {
   total: number
   records: questListItem[]
 }
+
+// 回答问题
+export type ReplyType = {
+  htmlContent: string
+  mdContent: string
+  questionId: string | string[]
+}
+
+// 发布评论
+export type ComType = {
+  content: string
+  articleId: string | string[]
+}

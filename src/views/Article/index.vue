@@ -132,18 +132,19 @@ const handleArtivleDetail = (id: number | string) => {
 }
 
 .itembox {
-  width: 375.2px;
-  height: 121.6px;
-  padding: 15px;
+  width: 100%;
   box-sizing: border-box;
+  padding: 15px;
 
   .infobox {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    box-sizing: border-box;
 
     .l {
-      min-width: 233.2px;
+      min-width: 70%;
+      margin-bottom: 20px;
 
       h3 {
         font-size: 17px;
